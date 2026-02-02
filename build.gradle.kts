@@ -1,3 +1,6 @@
+import org.springframework.boot.gradle.tasks.bundling.BootJar
+
+
 plugins {
     id("org.springframework.boot") version "4.0.1"
     id("io.spring.dependency-management") version "1.1.6"
@@ -5,7 +8,6 @@ plugins {
     id("java")
     id("java-library")
 }
-
 allprojects {
     group = "com.revy"
     version = "0.1.0"
@@ -21,13 +23,33 @@ allprojects {
         }
     }
 
+    tasks.withType<BootJar> {
+        enabled = false
+    }
+
+    tasks.withType<Test>().configureEach {
+        enabled = false
+    }
 }
 
+
+// Centralized version and dependency-management for subprojects
+extra["querydslVersion"] = "5.1.0"
+extra["jakartaPersistenceVersion"] = "3.1.0"
+extra["jjwtVersion"] = "0.12.7"
+
 subprojects {
-    // 반드시 java 플러그인 또는 application/plugin이 적용된 이후에 설정되도록
+    // Apply dependency management plugin to all subprojects
+    apply(plugin = "java")
+    apply(plugin = "io.spring.dependency-management")
+
+    dependencyManagement {
+        imports {
+            mavenBom("org.springframework.boot:spring-boot-dependencies:4.0.1")
+        }
+    }
+
     plugins.withType<JavaPlugin> {
-
-
         dependencies {
 
             // Lombok 공통 선언
@@ -35,13 +57,14 @@ subprojects {
             annotationProcessor("org.projectlombok:lombok:1.18.42")
             testCompileOnly("org.projectlombok:lombok:1.18.42")
             testAnnotationProcessor("org.projectlombok:lombok:1.18.42")
+
+            //
+            implementation("org.springframework:spring-context")
         }
 
-        // 테스트 공통 설정
-        tasks.withType<Test> {
-            useJUnitPlatform()
-        }
     }
-
-
+    // 테스트 공통 설정
+    tasks.withType<Test> {
+        useJUnitPlatform()
+    }
 }

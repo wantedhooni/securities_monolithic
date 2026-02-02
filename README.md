@@ -1,17 +1,22 @@
 # 증권사 + 은행 서버를 만들어보았다.
-## trading-mono
-
+## securities_monolithic
+- 모놀리식으로 주식 조회 사이트 개발
 
 
 ### 생각중
 ---
-- API GATEWAY + MSA로 먼저 할려고 하니 머리가 아파서
-- 모놀리식으로 주식 조회 사이트 개발
 - 나중에 API GATEWAY + MSA로 떼어낼수 있게 코드 작성한다.
-- 환전을 또 만들까? 손이 많이 가는데.. ㅠ_ㅠ
-- AWS 배포 미리 작업 해두자!!
+- ADMIN 관리 사이트는 어떻게 해볼까?
+- - 결국 내가 하고 싶은거는 백오피스 관리인데
+- - 원장 / 전표(Ledger / Journal) 생성 관리인데
 
 ### TODOS
+---
+
+- [x]AWS 배포
+- - [x] web-ui 배포
+- - [x] API-SERVER 배포
+
 ---
 - [x] USER 생성
 - [x] JWT 인증
@@ -41,6 +46,11 @@
 - - [ ] Position 조회 Service / RestAPI
 - - [ ] Trade 조회 Service / RestAPI
 
+- 환율 / 환전 개발해보자
+- - [x] 환율 구간 Entity / Repository / Service
+- - [ ] 환율 조회 API 조사
+- - 
+
 # local 실행
 ---
 
@@ -48,10 +58,10 @@
 ---
 ```
 # yfinanace-server Proxy 서버 실행
-docker compose -f ./docker/yfinanace-server/docker-compose.yml up -d 
+docker compose -f ./docker/yfinance-server/docker-compose.yml up -d
 # mariadb / redis 실행
 docker compose -f ./docker-compose.yml up -d
-/gradlew api-server:bootRun
+./gradlew api-server:bootRun
 ```
 ### API-SERVER
 ---
@@ -96,7 +106,7 @@ cd web-ui && npm install && npm run dev
 # 관련 인프라 실행
 ```
 # yfinanace-server Proxy 서버 실행(주가 조회 프록시 서버)
-docker compose -f ./docker/yfinanace-server/docker-compose.yml up -d
+docker compose -f ./docker/yfinance-server/docker-compose.yml up -d
 # mariadb / redis 실행 
 docker compose -f ./docker-compose.yml up -d 
 ```
